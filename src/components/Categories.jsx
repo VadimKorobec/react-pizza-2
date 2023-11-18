@@ -4,24 +4,21 @@ export const Categories = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const categories = [
-    "Все",
-    "Мясные",
-    "Вегетарианская",
-    "Гриль",
-    "Острые",
-    "Закрытые",
+    "All",
+    "Meat",
+    "Vegetarian",
+    "Grill",
+    "Spacy",
+    "Closed",
   ];
-
-  const onClickCategory = (idx) => {
-    setActiveIndex(idx);
-  };
 
   return (
     <div className="categories">
       <ul>
         {categories.map((item, idx) => (
-          <li key={idx}
-            onClick={() => onClickCategory(idx)}
+          <li
+            key={idx}
+            onClick={() => setActiveIndex(idx)}
             className={activeIndex === idx ? "active" : ""}
           >
             {item}
