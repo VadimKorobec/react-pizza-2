@@ -10,7 +10,7 @@ import "./scss/app.scss";
 
 export const App = () => {
   const[searchValue,setSearchValue] = useState('')
-  console.log(searchValue)
+  
 
   return (
     <div>
@@ -18,7 +18,7 @@ export const App = () => {
         <Header value={searchValue} onSearch={setSearchValue}  />
         <div className="content">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home searchValue={searchValue} />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
