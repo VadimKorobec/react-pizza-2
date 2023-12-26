@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -24,6 +24,7 @@ export const Home = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isSearch = useRef(false);
 
   const { searchValue } = useContext(SearchContext);
   const [items, setItems] = useState([]);
@@ -37,19 +38,7 @@ export const Home = () => {
     dispatch(setCurrentPage(number));
   };
 
-  useEffect(() => {
-    if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
-      const sort = list
-      dispatch(
-        setFilters({
-          ...params,
-        })
-      );
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
+  const fetchPizzas = () => {
     setIsLoading(true);
 
     const order = sort.sortProperty.includes("-") ? "asc" : "desc";
@@ -65,9 +54,30 @@ export const Home = () => {
         setItems(res.data);
         setIsLoading(false);
       });
+  };
 
+  useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
+      const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
+      dispatch(
+        setFilters({
+          ...params,
+          sort,
+        })
+      );
+      isSearch.current = true;
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
-  }, [categoryId, sort, searchValue, currentPage]);
+    if (!isSearch.current) {
+      fetchPizzas();
+    }
+
+    isSearch.current = false;
+  }, [categoryId, sort.sortProperty, searchValue, currentPage, fetchPizzas]);
 
   useEffect(() => {
     const queryString = qs.stringify({
