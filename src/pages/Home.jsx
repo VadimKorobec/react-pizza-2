@@ -21,14 +21,14 @@ export const Home = () => {
   const { categoryId, sort, currentPage } = useSelector(
     (state) => state.filter
   );
+  const { searchValue } = useContext(SearchContext);
+  const [items, setItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isSearch = useRef(false);
-
-  const { searchValue } = useContext(SearchContext);
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const isMounted = useRef(false);
 
   const onChangeCategory = (idx) => {
     dispatch(setCategoryId(idx));
@@ -56,6 +56,8 @@ export const Home = () => {
       });
   };
 
+ 
+
   useEffect(() => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1));
@@ -70,6 +72,18 @@ export const Home = () => {
     }
   }, [dispatch]);
 
+   useEffect(() => {
+     if (isMounted.current) {
+       const queryString = qs.stringify({
+         sortProperty: sort.sortProperty,
+         categoryId,
+         currentPage,
+       });
+       navigate(`?${queryString}`);
+     }
+     isMounted.current = true;
+   }, [categoryId, sort.sortProperty, currentPage, navigate]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!isSearch.current) {
@@ -77,16 +91,7 @@ export const Home = () => {
     }
 
     isSearch.current = false;
-  }, [categoryId, sort.sortProperty, searchValue, currentPage, fetchPizzas]);
-
-  useEffect(() => {
-    const queryString = qs.stringify({
-      sortProperty: sort.sortProperty,
-      categoryId,
-      currentPage,
-    });
-    navigate(`?${queryString}`);
-  }, [categoryId, sort, currentPage, navigate]);
+  }, [categoryId, sort.sortProperty, searchValue, currentPage]);
 
   const pizzas = items.map((item) => <PizzaBlock key={item.id} {...item} />);
 
