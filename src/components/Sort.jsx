@@ -27,14 +27,27 @@ export const Sort = () => {
     const handleClickOutside = (e) => {
       if (!e.composedPath().includes(sortRef.current)) {
         setOpen(false);
-        console.log('click outside')
       }
-    }
+    };
     document.body.addEventListener("click", handleClickOutside);
 
     return () => {
-      document.body.removeEventListener('click',handleClickOutside)
-    }
+      document.body.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    const onEscapePress = (e) => {
+      if (e.code === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onEscapePress);
+
+    return () => {
+      window.removeEventListener("keydown", onEscapePress);
+    };
   }, []);
 
   return (
