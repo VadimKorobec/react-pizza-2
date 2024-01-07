@@ -22,7 +22,7 @@ export const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
       title,
       price,
       imageUrl,
-      size: activeSize,
+      size: sizes[activeSize],
       types: typeNames[activeType],
     };
     dispatch(addItem(item));

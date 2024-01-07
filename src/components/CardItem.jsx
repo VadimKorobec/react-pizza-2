@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { addItem, removeItem } from "../redux/slices/cartSlice";
+import { addItem,minusItem,removeItem } from "../redux/slices/cartSlice";
 
 export const CardItem = ({
   id,
@@ -17,8 +17,12 @@ export const CardItem = ({
   };
 
   const onClickMinus = () => {
-    dispatch(removeItem(id));
+    dispatch(minusItem(id));
   };
+
+  const onClickRemove = () => {
+    dispatch(removeItem(id))
+  }
 
   return (
     <>
@@ -81,7 +85,7 @@ export const CardItem = ({
           <b>{price * count} $</b>
         </div>
         <div className="cart__item-remove">
-          <div className="button button--outline button--circle">
+          <div onClick={onClickRemove} className="button button--outline button--circle">
             <svg
               width="10"
               height="10"
