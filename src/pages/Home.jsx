@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import qs from "qs";
 
 import {
+  selectFilter,
   setCategoryId,
   setCurrentPage,
   setFilters,
@@ -14,17 +15,13 @@ import { PizzaBlock } from "../components/PizzaBlock/PizzaBlock";
 import { Skeleton } from "../components/PizzaBlock/Skeleton";
 import { Sort, list } from "../components/Sort";
 import { Pagination } from "../components/Pagination/Pagination";
-import { SearchContext } from "../App";
-import { fetchPizzas } from "../redux/slices/pizzasSlice";
+import { fetchPizzas, selectPizzaData } from "../redux/slices/pizzasSlice";
 
 export const Home = () => {
-  const { categoryId, sort, currentPage } = useSelector(
-    (state) => state.filter
-  );
-  const { items, status } = useSelector((state) => state.pizzas);
-  console.log(items);
+  const { categoryId, sort, currentPage,searchValue } = useSelector(selectFilter);
+  const { items, status } = useSelector(selectPizzaData);
 
-  const { searchValue } = useContext(SearchContext);
+  
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,8 +42,6 @@ export const Home = () => {
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `search=${searchValue}` : "";
 
-  
-
     dispatch(
       fetchPizzas({
         order,
@@ -57,8 +52,8 @@ export const Home = () => {
       })
     );
 
-    window.scrollTo(0, 0)
-  }
+    window.scrollTo(0, 0);
+  };
 
   useEffect(() => {
     if (window.location.search) {

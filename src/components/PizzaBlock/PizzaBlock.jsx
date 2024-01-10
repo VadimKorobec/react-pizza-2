@@ -1,14 +1,12 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { addItem } from "../../redux/slices/cartSlice";
+import { addItem, selectCartItemById } from "../../redux/slices/cartSlice";
 
 const typeNames = ["slim", "classic"];
 
 export const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
-  const cardItem = useSelector((state) =>
-    state.cart.items.find((item) => item.id === id)
-  );
+  const cardItem = useSelector(selectCartItemById(id));
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
 
@@ -76,7 +74,7 @@ export const PizzaBlock = ({ id, title, price, imageUrl, sizes, types }) => {
               />
             </svg>
             <span>Add</span>
-            {addedCount > 0 && <i>{ addedCount}</i>}
+            {addedCount > 0 && <i>{addedCount}</i>}
           </button>
         </div>
       </div>
